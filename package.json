@@ -1,0 +1,23 @@
+{
+  "name": "payload-labs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo for Payload Labs: Hydrogen storefront + Storyblok CMS",
+  "license": "MIT",
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6"
+  },
+  "lint-staged": {
+    "hydrogen-storefront/**/*.{js,jsx,ts,tsx}": [
+      "npm --prefix hydrogen-storefront run lint:fix --",
+      "npm --prefix hydrogen-storefront run prettier:write --"
+    ],
+    "hydrogen-storefront/**/*.{json,css,md}": [
+      "npm --prefix hydrogen-storefront run prettier:write --"
+    ]
+  }
+}
