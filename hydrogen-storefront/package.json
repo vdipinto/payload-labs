@@ -9,8 +9,8 @@
     "build": "shopify hydrogen build --codegen",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
-    "lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
-    "prettier:write": "prettier --write .",
+    "lint:fix": "eslint --fix",
+    "prettier:write": "prettier --write",
     "typecheck": "tsc --noEmit",
     "codegen": "shopify hydrogen codegen"
   },

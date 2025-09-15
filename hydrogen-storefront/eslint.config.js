@@ -1,3 +1,4 @@
+// eslint.config.js
 import {fixupConfigRules, fixupPluginRules} from '@eslint/compat';
 import eslintComments from 'eslint-plugin-eslint-comments';
 import react from 'eslint-plugin-react';
