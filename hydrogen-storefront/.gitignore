@@ -4,7 +4,9 @@ node_modules
 /dist
 /public/build
 /.mf
-.env
+.env*
+# keep the template in Git
+!.env.example
 .shopify
 .react-router
 
