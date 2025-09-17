@@ -25,5 +25,6 @@
     },
     "noEmit": true,
     "rootDirs": [".", "./.react-router/types"]
-  }
+  },
+  "exclude": ["app/_archive", "node_modules", "dist"]
 }
