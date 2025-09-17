@@ -27,11 +27,13 @@ export default [
     ignores: [
       '**/node_modules/',
       '**/build/',
+      '**/dist/',
       '**/*.graphql.d.ts',
       '**/*.graphql.ts',
       '**/*.generated.d.ts',
       '**/.react-router/',
       '**/packages/hydrogen/dist/',
+      '**/app/_archive/**',
     ],
   },
   ...fixupConfigRules(
