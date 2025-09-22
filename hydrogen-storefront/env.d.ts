@@ -20,6 +20,13 @@ declare global {
 
   interface Env extends HydrogenEnv {
     // declare additional Env parameter use in the fetch handler and Remix loader context here
+    /**
+     * Storyblok
+     */
+    VITE_STORYBLOK_TOKEN?: string; // Preview or Public token
+    STORYBLOK_API_REGION?: 'eu' | 'us'; // Region of your space
+    STORYBLOK_PREVIEW?: 'true' | 'false' | '1' | '0'; // draft vs published
+    STORYBLOK_HEADER_SLUG?: string; // Optional override (default "global")
   }
 }
 
