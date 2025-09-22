@@ -1,13 +1,21 @@
+// app/components/PageLayout.tsx
 import {Await, Link} from 'react-router';
-import {Suspense, useId} from 'react';
+import {Suspense, useEffect, useId} from 'react';
 import type {
   CartApiQueryFragment,
   FooterQuery,
   HeaderQuery,
 } from 'storefrontapi.generated';
-import {Aside} from '~/components/Aside';
+
+import {Aside, useAside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
-import {Header, HeaderMenu} from '~/components/Header';
+// ❌ remove the starter header imports
+// import {Header, HeaderMenu} from "~/components/Header";
+
+// ✅ add your Storyblok header wrapper + type
+import SBHeader from '~/components/blocks/Header';
+import type {HeaderBlok} from '~/types/storyblok';
+
 import {CartMain} from '~/components/CartMain';
 import {
   SEARCH_ENDPOINT,
@@ -15,13 +23,62 @@ import {
 } from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 
+/**
+ * We keep Shopify data (header/footer) for the starter Footer + predictive search,
+ * but replace the starter Header with your Storyblok header.
+ */
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
   footer: Promise<FooterQuery | null>;
-  header: HeaderQuery;
+  header: HeaderQuery; // still used by Footer + predictive search
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
   children?: React.ReactNode;
+
+  /** NEW: Storyblok header blok (provided from root loader) */
+  sbHeaderBlok?: HeaderBlok | null;
+}
+
+/**
+ * Bridges nav CustomEvents to Hydrogen's Aside drawers.
+ * Your nav triggers:
+ *   - window.dispatchEvent(new CustomEvent("open-cart"))
+ *   - window.dispatchEvent(new CustomEvent("open-search"))
+ *   - window.dispatchEvent(new CustomEvent("toggle-currency"))
+ */
+function NavEventBridge() {
+  const {open} = useAside();
+
+  useEffect(() => {
+    const onCart = () => open('cart');
+    const onSearch = () => open('search');
+    const onToggleCurrency = () => {
+      const next =
+        (localStorage.getItem('currency') || 'GBP') === 'EUR' ? 'GBP' : 'EUR';
+      localStorage.setItem('currency', next);
+      document.dispatchEvent(
+        new CustomEvent('currency-changed', {detail: next}),
+      );
+    };
+
+    window.addEventListener('open-cart', onCart as EventListener);
+    window.addEventListener('open-search', onSearch as EventListener);
+    window.addEventListener(
+      'toggle-currency',
+      onToggleCurrency as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener('open-cart', onCart as EventListener);
+      window.removeEventListener('open-search', onSearch as EventListener);
+      window.removeEventListener(
+        'toggle-currency',
+        onToggleCurrency as EventListener,
+      );
+    };
+  }, [open]);
+
+  return null;
 }
 
 export function PageLayout({
@@ -31,21 +88,24 @@ export function PageLayout({
   header,
   isLoggedIn,
   publicStoreDomain,
+  sbHeaderBlok,
 }: PageLayoutProps) {
   return (
     <Aside.Provider>
+      {/* Bridge nav buttons → Hydrogen drawers */}
+      <NavEventBridge />
+
+      {/* Keep Shopify asides for cart & search */}
       <CartAside cart={cart} />
       <SearchAside />
-      <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
-      {header && (
-        <Header
-          header={header}
-          cart={cart}
-          isLoggedIn={isLoggedIn}
-          publicStoreDomain={publicStoreDomain}
-        />
-      )}
+
+      {/* ❌ Remove the starter <Header .../> */}
+      {/* ✅ Render your Storyblok header */}
+      {sbHeaderBlok ? <SBHeader blok={sbHeaderBlok} /> : null}
+
       <main>{children}</main>
+
+      {/* Keep the starter footer (uses Shopify footer + header.shop.primaryDomain) */}
       <Footer
         footer={footer}
         header={header}
@@ -60,9 +120,7 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
     <Aside type="cart" heading="CART">
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
-          {(cart) => {
-            return <CartMain cart={cart} layout="aside" />;
-          }}
+          {(cart) => <CartMain cart={cart} layout="aside" />}
         </Await>
       </Suspense>
     </Aside>
@@ -151,24 +209,9 @@ function SearchAside() {
   );
 }
 
-function MobileMenuAside({
-  header,
-  publicStoreDomain,
-}: {
-  header: PageLayoutProps['header'];
-  publicStoreDomain: PageLayoutProps['publicStoreDomain'];
-}) {
-  return (
-    header.menu &&
-    header.shop.primaryDomain?.url && (
-      <Aside type="mobile" heading="MENU">
-        <HeaderMenu
-          menu={header.menu}
-          viewport="mobile"
-          primaryDomainUrl={header.shop.primaryDomain.url}
-          publicStoreDomain={publicStoreDomain}
-        />
-      </Aside>
-    )
-  );
-}
+/* NOTE:
+   We intentionally removed the starter MobileMenuAside:
+   - Your MobileMenu lives inside the Storyblok header/nav UI.
+   - If you ever want to drive the mobile menu via Hydrogen Aside instead,
+     emit a custom "open-mobile" event from your hamburger and add a new
+     <Aside type="mobile"> here. */
