@@ -1,6 +1,29 @@
-/**
- * Configure Tailwind v4 in this file using CSS variables and directives:
- * https://tailwindcss.com/docs/v4-beta#css-first-configuration
- */
-
 @import 'tailwindcss';
+
+/* Tailwind v4 tokens */
+@theme {
+  --font-sans:
+    'helvetica-neue-lt-pro', 'Helvetica Neue', Helvetica, Arial, ui-sans-serif,
+    system-ui, sans-serif;
+
+  /* base palette */
+  --color-basic-black: #000;
+  --color-basic-white: #fff;
+}
+
+/* Reset styles → base layer (early, non-visual defaults) */
+@layer base {
+  .btn-reset {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply text-[var(--color-basic-black)] px-4 py-2 cursor-pointer;
+  }
+}
