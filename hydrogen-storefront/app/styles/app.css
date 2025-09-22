@@ -1,3 +1,6 @@
+/* Global styles only.
+   Tailwind v4 is imported from app/styles/tailwind.css */
+
 :root {
   --aside-width: 400px;
   --cart-aside-summary-height-with-discount: 300px;
@@ -6,27 +9,57 @@
   --header-height: 64px;
   --color-dark: #000;
   --color-light: #fff;
+  --font-sans:
+    'helvetica-neue-lt-pro', 'Helvetica Neue', Helvetica, Arial, system-ui,
+    -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Liberation Sans',
+    sans-serif;
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Extra specificity to beat any plain `body { font-family: … }` */
+html body {
+  font-family: var(--font-sans);
 }
 
 img {
   border-radius: 4px;
 }
 
+/* -----------------------------------------------
+ * components/Header – DesktopNav override
+ * ----------------------------------------------- */
+
+/* Our DesktopNav lives inside <header>, but we don't want Hydrogen's
+   global `header nav { display:flex; … }` to affect it. Scope a class
+   and neutralize those flex styles so the <ul> controls layout. */
+header nav.desktop-nav {
+  display: block; /* cancel Hydrogen's flex layout */
+  flex-direction: initial;
+  align-items: initial;
+  gap: 0;
+  margin-left: 0; /* ensure it doesn't get pushed right */
+}
+
 /*
-* --------------------------------------------------
-* Non anchor links
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * Non anchor links
+  * --------------------------------------------------
+  */
 .link:hover {
   text-decoration: underline;
   cursor: pointer;
 }
 
 /*
-* --------------------------------------------------
-* components/Aside
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * components/Aside
+  * --------------------------------------------------
+  */
 @media (max-width: 45em) {
   html:has(.overlay.expanded) {
     overflow: hidden;
@@ -100,7 +133,6 @@ aside li {
   right: 0;
   top: 0;
   transition: opacity 400ms ease-in-out;
-  transition: opacity 400ms;
   visibility: hidden;
   z-index: 10;
 }
@@ -132,6 +164,7 @@ aside li {
   pointer-events: auto;
   visibility: visible;
 }
+
 /* reveal aside */
 .overlay.expanded aside {
   transform: translateX(calc(var(--aside-width) * -1));
@@ -158,10 +191,10 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /*
-* --------------------------------------------------
-* components/Header
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * components/Header
+  * --------------------------------------------------
+  */
 .header {
   align-items: center;
   background: #fff;
@@ -211,10 +244,10 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /*
-* --------------------------------------------------
-* components/Footer
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * components/Footer
+  * --------------------------------------------------
+  */
 .footer {
   background: var(--color-dark);
   margin-top: auto;
@@ -234,10 +267,10 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /*
-* --------------------------------------------------
-* components/Cart
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * components/Cart
+  * --------------------------------------------------
+  */
 .cart-main {
   height: 100%;
   max-height: calc(100vh - var(--cart-aside-summary-height));
@@ -287,11 +320,12 @@ button.reset:hover:not(:has(> *)) {
   align-items: center;
   display: flex;
 }
+
 /*
-* --------------------------------------------------
-* components/Search
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * components/Search
+  * --------------------------------------------------
+  */
 .predictive-search {
   height: calc(100vh - var(--header-height) - 40px);
   overflow-y: auto;
@@ -341,10 +375,10 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /*
-* --------------------------------------------------
-* routes/__index
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * routes/__index
+  * --------------------------------------------------
+  */
 .featured-collection {
   display: block;
   margin-bottom: 2rem;
@@ -378,10 +412,10 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /*
-* --------------------------------------------------
-* routes/collections._index.tsx
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * routes/collections._index.tsx
+  * --------------------------------------------------
+  */
 .collections-grid {
   display: grid;
   grid-gap: 1.5rem;
@@ -394,10 +428,10 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /*
-* --------------------------------------------------
-* routes/collections.$handle.tsx
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * routes/collections.$handle.tsx
+  * --------------------------------------------------
+  */
 .collection-description {
   margin-bottom: 1rem;
   max-width: 95%;
@@ -419,10 +453,10 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /*
-* --------------------------------------------------
-* routes/products.$handle.tsx
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * routes/products.$handle.tsx
+  * --------------------------------------------------
+  */
 .product {
   display: grid;
   @media (min-width: 45em) {
@@ -480,10 +514,10 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /*
-* --------------------------------------------------
-* routes/blog._index.tsx
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * routes/blog._index.tsx
+  * --------------------------------------------------
+  */
 .blog-grid {
   display: grid;
   grid-gap: 1.5rem;
@@ -501,21 +535,20 @@ button.reset:hover:not(:has(> *)) {
 }
 
 /*
-* --------------------------------------------------
-* routes/blog.$articlehandle.tsx
-* --------------------------------------------------
-*/
+  * --------------------------------------------------
+  * routes/blog.$articlehandle.tsx
+  * --------------------------------------------------
+  */
 .article img {
   height: auto;
   width: 100%;
 }
 
 /*
-* --------------------------------------------------
-* routes/account
-* --------------------------------------------------
-*/
-
+  * --------------------------------------------------
+  * routes/account
+  * --------------------------------------------------
+  */
 .account-logout {
   display: inline-block;
 }
